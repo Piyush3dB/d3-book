@@ -29,9 +29,7 @@
 			   .data(dataset)
 			   .enter()
 			   .append("rect")
-			   .attr("x", function(d, i) {
-			   		return i * (w / dataset.length);
-			   })
+			   .attr("x", function(d, i) {return i * (w / dataset.length); })
 			   .attr("y", 0)
 			   .attr("width", 20)
 			   .attr("height", 100);
