@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>D3: Setting the content of paragraphs from data</title>
+		<script type="text/javascript" src="../d3.js"></script>
+	</head>
+	<body>
+        <div id="updatableChart"></div>
+        <script type="text/javascript">
+
+        /* Define the Chart module */
+        function chartModule() {
+            var text = "Empty paragraph";
+            
+            /* Define Ctor */
+            function chart(selection) {
+
+                d3.select('#updatableChart').selectAll("p")
+				.data(dataset)
+				.enter()
+				.append("p")
+                .text(function(d) { return d; });
+                /*
+                selection.each(function (data) {
+                    var dom = d3.select(this);
+                    console.log(data);
+                    dom.append("p").text(function(d) { return d; });
+                })
+                */
+            }
+            
+            /* Define Strs and Gtrs */
+            chart.text = function(_) {
+                if (!arguments.length) return text;
+                text = _;
+                return chart;
+            }
+
+            /* Return closure */
+            return chart;
+        }
+
+        /* Create chart object */
+        var dataset = [ 5, 10, 15, 20, 25 ];
+        var updatableChart = chartModule().text("New paragraph");
+        d3.select('div#updatableChart')
+            .datum(dataset)
+            .call(updatableChart);
+
+        console.log("Done!");
+
+/*
+			
+			d3.select("body").selectAll("p")
+				.data(dataset)
+				.enter()
+				.append("p")
+				.text(function(d) { return d; });
+*/			
+		</script>
+	</body>
+</html>

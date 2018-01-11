@@ -6,8 +6,39 @@
         <script type="text/javascript" src="../d3.js"></script>
     </head>
     <body>
+        <div id="updatableChart"></div>
+
         <script type="text/javascript">
-            d3.select("body").append("p").text("New paragraph!");
+
+        log = console.log;
+
+        /* Define the Chart module */
+        function chartModule() {
+            var text = "Empty paragraph";
+            
+            /* Define Ctor */
+            function chart() {
+                //var dom = d3.select(this);
+                d3.select('div#updatableChart').append("p").text(text);
+            }
+            
+            /* Define Strs and Gtrs */
+            chart.text = function(_) {
+                if (!arguments.length) return text;
+                text = _;
+                return chart;
+            }
+
+            /* Return closure */
+            return chart;
+        }
+
+        /* Create chart object */
+        var updatableChart = chartModule().text("New paragraph");
+        d3.select('div#updatableChart')
+            .call(updatableChart);
+
+        log("Done!");
         </script>
     </body>
 </html>
