@@ -16,18 +16,28 @@
             /* Define Ctor */
             function chart(selection) {
 
-                d3.select('#updatableChart').selectAll("p")
+                /*
+                selection.selectAll("p")
 				.data(dataset)
 				.enter()
 				.append("p")
                 .text(function(d) { return d; });
-                /*
-                selection.each(function (data) {
-                    var dom = d3.select(this);
-                    console.log(data);
-                    dom.append("p").text(function(d) { return d; });
-                })
                 */
+
+                console.log(selection);
+                //
+                selection.each(function (data) {
+                    var dom = d3.select(this)
+                                .selectAll("p")
+                                .enter()
+                                .data(data)
+                                .append("p")
+                                .text("test");
+                    console.log(this);
+                    //dom.append("p").text(function(d) { return d; });
+                })
+                //
+                
             }
             
             /* Define Strs and Gtrs */
