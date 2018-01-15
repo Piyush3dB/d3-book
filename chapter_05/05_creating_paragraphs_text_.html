@@ -6,7 +6,8 @@
 		<script type="text/javascript" src="../d3.js"></script>
 	</head>
 	<body>
-        <div id="updatableChart"></div>
+        <div id="updatableChart1"></div>
+        <div id="updatableChart2"></div>
         <script type="text/javascript">
 
         /**/
@@ -56,15 +57,20 @@
         /* Create chart object */
         /**/
         var dataset = [ 5, 10, 15, 20, 25 ];
-        var updatableChart = chartModule().text("Creating new chart..");
+        var updatableChart = chartModule().text("Creating callable chart object..");
         console.log(updatableChart.text());
 
         /**/
         /* select, bind, call */
         /**/
-        d3.select('div#updatableChart')
+        d3.select('div#updatableChart1')
             .datum(dataset)
             .call(updatableChart);
+
+        d3.select('div#updatableChart2')
+            .datum(dataset)
+            .call(updatableChart);
+
 
         /* Finally */
         console.log("Done!");
