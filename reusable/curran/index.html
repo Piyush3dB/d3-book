@@ -31,19 +31,31 @@
     </style>
   </head>
   <body>
-    <p id="example">
+    <p id="example1">
+    <p id="example2">
+    <p id="example3">
     <script>
 
-      var chart = timeSeriesChart()
-          .x(function(d) { return formatDate.parse(d.date); })
-          .y(function(d) { return +d.price; });
+      var csvFile = "sp500.csv";
 
       var formatDate = d3.time.format("%b %Y");
-    
-      d3.csv("sp500.csv", function(data) {
-        d3.select("#example")
-            .datum(data)
-            .call(chart);
+
+      var chart1 = timeSeriesChart()
+          .x(function(d) { return formatDate.parse(d.date); })
+          .y(function(d) { return +d.price; }).height(50);
+
+      var chart2 = timeSeriesChart()
+          .x(function(d) { return formatDate.parse(d.date); })
+          .y(function(d) { return +d.price; }).height(100);
+
+      var chart3 = timeSeriesChart()
+          .x(function(d) { return formatDate.parse(d.date); })
+          .y(function(d) { return +d.price; }).height(200);
+
+      d3.csv(csvFile, function(data) {
+        d3.select("#example1").datum(data).call(chart1);
+        d3.select("#example2").datum(data).call(chart2);
+        d3.select("#example3").datum(data).call(chart3);
       });
 
     </script>
