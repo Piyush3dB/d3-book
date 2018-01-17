@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>D3: Bar chart with random values</title>
+		<script type="text/javascript" src="../d3.js"></script>
+		<style type="text/css">
+		
+			div.bar {
+				display: inline-block;
+				width: 20px;
+				height: 75px;	/* Gets overridden by D3-assigned height below */
+				margin-right: 2px;
+				background-color: teal;
+			}
+		
+		</style>
+	</head>
+	<body>
+
+        <div id="updatableChart1"></div>
+
+		<script type="text/javascript">
+
+			var dataset = [];  						 //Initialize empty array
+			for (var i = 0; i < 25; i++) {			 //Loop 25 times
+				var newNumber = Math.random() * 30;  //New random number (0-30)
+				dataset.push(newNumber);			 //Add new number to array
+			}
+			
+            //d3.selectAll("div#updatableChart1")
+            d3.select("body").select('div#updatableChart1')
+                .select("div") // TODO - comment this out and see what happens
+				.data(dataset)
+				.enter()
+				.append("div")
+				.attr("class", "bar")
+				.style("height", function(d) {
+					var barHeight = d * 5;
+					return barHeight + "px";
+				});
+			
+		</script>
+	</body>
+</html>
