@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.1.0/react.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.1.0/react-dom.js"></script>
+  <script src="https://npmcdn.com/babel-core@5.8.34/browser.min.js"></script>
+  <script src="http://d3js.org/d3.v3.min.js"></script>
+  <script src="test.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.5/require.js"></script>
+</head>
+
+<body>
+
+<div id="main" />
+
+<script type="text/babel">
+
+/*
+https://www.sitepoint.com/getting-started-react-jsx/
+ <script type="text/babel" src="src/random-message.jsx">
+ */
+//var test = require('./test');
+//import msg from './test.js'
+console.log(msg);
+
+
+
+
+// Number of clocks on the page
+let spinnerCounter = 0;
+class GooeySpinner extends React.Component {
+  constructor(props) {
+    super(props);
+    this.spinnerID = spinnerCounter++;
+    this._repeat = this._repeat.bind(this);
+    this._getFilterID = this._getFilterID.bind(this);
+  }
+
+  componentDidMount() {
+    const {width, steps, color} = this.props;
+    // Create scale
+    this.radialScale = d3.scale.linear()
+      .domain([-1.5, 1.5])
+      .range([-width/2, width/2]);
+    // color from http://colrd.com/palette/24070/
+    this.colorScale = d3.scale.ordinal().range(color);
+
+    this._flyCirclesContainer = d3.select(ReactDOM.findDOMNode(this.refs.flyCircles));
+    this._flyCircles = this._flyCirclesContainer.selectAll('.flyCircle')
+      .data(d3.range(steps).map((num) => (num / steps ) * (2 * Math.PI)));
+    this._flyCircles.enter()
+      .append('circle')
+        .attr({
+          class: 'flyCircle',
+          cx: 0,
+          cy: 0,
+          r: 4,
+        })
+        .style('fill', (d, i) => this.colorScale(i))
+        .call(this._repeat);
+  }
+
+  endall(transition, callback) {
+  let n = 0;
+  transition
+    .each(function() { ++n; })
+    .each('end', function() { if (!--n) callback.apply(this, arguments); });
+  }// endall
+
+  _repeat() {
+    const {steps} = this.props;
+    const dur = 1000;
+    const del = 100;
+    this._flyCircles
+      .transition('outward')
+        .duration(dur)
+        .delay((_,i) => i * del)
+        .attr({
+          cx: (d) => this.radialScale(Math.cos(d)),
+          cy: (d) => this.radialScale(Math.sin(d)),
+        })
+      .transition('inward')
+        .duration(dur)
+        .delay((d,i) => (steps * 1.2) * del + i * del)
+        .attr('cx', 0)
+        .attr('cy', 0)
+      .call(this.endall, this._repeat);
+
+  }
+
+  _getFilterID() {
+    return `gooey-${this.spinnerID}`;
+  }
+
+  render() {
+    const {width, height, margin} = this.props;
+
+    return (
+      <div>
+        <svg width={width} height={height}>
+          <defs>
+            <filter id={this._getFilterID()}>
+              <feGaussianBlur
+                in="SourceGraphic"
+                stdDeviation={4}
+                result="blur"
+              />
+              <feColorMatrix
+                in="blur"
+                mode="matrix"
+                values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7"
+              />
+            </filter>
+          </defs>
+          <g
+            filter={`url(#${this._getFilterID()})`}
+            transform={`translate(${width/2}, ${height/2})`}>
+            <circle
+              className="centerCircle"
+              cx={0}
+              cy={0}
+              r={4}
+              fill="#513700"
+            />
+            <g ref="flyCircles" />
+          </g>
+        </svg>
+      </div>
+    );
+  }
+}
+GooeySpinner.defaultProps = {
+  width: 60,
+  height: 60,
+  steps: 12,
+  color: [
+    '#a50026',    '#d73027',    '#f46d43',
+    '#fdae61',    '#fee08b',
+    '#d9ef8b',    '#a6d96a',    '#66bd63',
+    '#1a9850',    '#006768',    '#00425d',
+  ],
+};
+
+class App extends React.Component {
+  render() {
+    return (
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'flexstart',
+        flexWrap: 'wrap',
+      }}>
+        {d3.range(1).map((key) => <GooeySpinner key={key} />)}
+      </div>
+    );
+  }
+}
+
+ReactDOM.render(
+  <App />,
+  document.getElementById('main') 
+);
+
+</script>
+
+</body>
