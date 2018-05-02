@@ -117,6 +117,19 @@ function Matrix(options) {
 	    .style("fill", function(d, i) { return d >= maxValue/2 ? 'white' : 'black'; })
 	    .text(function(d, i) { return d; });
 
+    cell.append("text")
+	    .attr("dy", ".32em")
+	    .attr("x", x.rangeBand() - 15)
+	    .attr("y", y.rangeBand() - 15)
+	    .attr("text-anchor", "middle")
+	    .style("fill", function(d, i) { return d >= maxValue/2 ? 'white' : 'black'; })
+	    .text(function(d, i) { 
+            if (i === 1){
+                return "TN"
+            }
+         });
+
+
 	row.selectAll(".cell")
 	    .data(function(d, i) { return data[i]; })
 	    .style("fill", colorMap);
@@ -125,7 +138,7 @@ function Matrix(options) {
 		.attr('class', "labels");
 
 	var columnLabels = labels.selectAll(".column-label")
-	    .data(labelsData)
+	    .data(labelsData.slice(2, 4))
 	    .enter().append("g")
 	    .attr("class", "column-label")
 	    .attr("transform", function(d, i) { return "translate(" + x(i) + "," + height + ")"; });
@@ -143,11 +156,11 @@ function Matrix(options) {
 	    .attr("y", y.rangeBand() / 2)
 	    .attr("dy", ".22em")
 	    .attr("text-anchor", "end")
-	    .attr("transform", "rotate(-60)")
+	    .attr("transform", "rotate(-50)")
 	    .text(function(d, i) { return d; });
 
 	var rowLabels = labels.selectAll(".row-label")
-	    .data(labelsData)
+	    .data(labelsData.slice(0, 2))
 	  .enter().append("g")
 	    .attr("class", "row-label")
 	    .attr("transform", function(d, i) { return "translate(" + 0 + "," + y(i) + ")"; });
@@ -255,8 +268,8 @@ function tabulate(data, columns) {
 	<script>
 
 		var confusionMatrix = [
-			[169, 10],
-			[7, 46]
+			[10, 10],
+			[7, 4]
 		];
 
         var tp = confusionMatrix[0][0];
@@ -280,7 +293,7 @@ function tabulate(data, columns) {
         var computedData = [];
         computedData.push({"F1":f1, "PRECISION":precision,"RECALL":recall,"ACCURACY":accuracy});
 
-        var labels = ['Class A', 'Class B'];
+        var labels = ['Actual N', 'Actual P', 'Predicted N', 'Predicted P'];
 		Matrix({
 			container : '#container',
 			data      : confusionMatrix,
